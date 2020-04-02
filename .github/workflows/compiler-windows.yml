@@ -11,7 +11,7 @@ jobs:
     - name: checkout base repo
       uses: actions/checkout@master
     - name: Checkout submodules
-      uses: textbook/git-checkout-submodule-action@master      
+      uses: jwsi/submodule-checkout@master      
       
     - name: Set up Python 3.7
       uses: actions/setup-python@v1
