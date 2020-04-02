@@ -8,10 +8,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: checkout base repo
+    - name: clone repo
       uses: actions/checkout@master
-    - name: Checkout submodules
-      run: git submodule update --init --recursive
+      with:
+        submodules: 'true'
       
     - name: Set up Python 3.7
       uses: actions/setup-python@v1
@@ -27,7 +27,6 @@ jobs:
     - name: pyinstaller version
       run: pyinstaller --version
     
-
     #- name: run SSTslicer directly
     #  run: python .\src\SSTslicer.py
     
