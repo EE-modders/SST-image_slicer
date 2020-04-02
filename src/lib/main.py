@@ -2,9 +2,10 @@
 Main functionality of ``image_slicer``.
 '''
 import os
+from io import BytesIO
 from math import sqrt, ceil, floor
-
 from PIL import Image
+
 
 from .helpers import get_basename
 
@@ -35,7 +36,7 @@ class Tile(object):
     def generate_filename(self, directory=os.getcwd(), prefix='tile',
                           format='png', path=True):
         """Construct and return a filename for this tile."""
-        filename = prefix + '_{col:02d}_{row:02d}.{ext}'.format(
+        filename = prefix + '_{col:01d}_{row:01d}.{ext}'.format(
                       col=self.column, row=self.row, ext=format.lower().replace('jpeg', 'jpg'))
         if not path:
             return filename
@@ -128,13 +129,13 @@ def validate_image_col_row(image , col , row):
     if col == 1 and row == 1:
         raise ValueError('There is nothing to divide. You asked for the entire image.')
 
-def slice(filename, number_tiles=None, col=None, row=None, 
+def slice(bytesIO: BytesIO, name: str, number_tiles=None, col=None, row=None, 
           save=True, DecompressionBombWarning=True):
     """
     Split an image into a specified number of tiles.
 
     Args:
-       filename (str):  The filename of the image to split.
+       filename_or_bytesIO (BytesIO): the image file as BytesIO object
        number_tiles (int):  The number of tiles required.
 
     Kwargs:
@@ -147,7 +148,7 @@ def slice(filename, number_tiles=None, col=None, row=None,
     if DecompressionBombWarning is False:
         Image.MAX_IMAGE_PIXELS = None
     
-    im = Image.open(filename)
+    im = Image.open(bytesIO)
     im_w, im_h = im.size
 
     columns = 0
@@ -177,12 +178,10 @@ def slice(filename, number_tiles=None, col=None, row=None,
             tiles.append(tile)
             number += 1
     if save:
-        save_tiles(tiles,
-                   prefix=get_basename(filename),
-                   directory=os.path.dirname(filename))
+        save_tiles(tiles, prefix=name, directory=os.getcwd())
     return tuple(tiles)
 
-def save_tiles(tiles, prefix='', directory=os.getcwd(), format='png'):
+def save_tiles(tiles, prefix='', directory=os.getcwd(), format='tga'):
     """
     Write image files to disk. Create specified folder(s) if they
        don't exist. Return list of :class:`Tile` instance.
@@ -210,27 +209,24 @@ def save_tiles(tiles, prefix='', directory=os.getcwd(), format='png'):
 
 def get_image_column_row(filename):
     """Determine column and row position for filename."""
-    row, column = os.path.splitext(filename)[0][-5:].split('_')
-    return (int(column)-1, int(row)-1)
+    filename = filename.split('.')[-2].split('_')
+    row = int(filename[-2])
+    column = int(filename[-1])
 
+    return (column-1, row-1)
 
-def open_images_in(directory):
-    """Open all images in a directory. Return tuple of Tile instances."""
+def get_tiles(files: list):
 
-    files = [filename for filename in os.listdir(directory)
-                    if '_' in filename and not filename.startswith('joined')]
     tiles = []
-    if len(files) > 0:
-        i = 0
-        for file in files:
-            pos = get_image_column_row(file)
-            im = Image.open(os.path.join(directory, file))
+    if len(files) > 0:        
+        for i, file in enumerate(files):
+            pos = get_image_column_row(file[0])
+            im = Image.open(file[1])
 
             position_xy=[0,0]
             count=0
             for a,b in zip(pos,im.size):
                 position_xy[count] = a*b
                 count = count + 1
-            tiles.append(Tile(image = im, position = pos, number = i+1, coords = position_xy, filename = file))
-            i = i + 1
+            tiles.append(Tile(image = im, position = pos, number = i+1, coords = position_xy, filename = file[0]))
     return tiles
