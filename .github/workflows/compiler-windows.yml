@@ -8,7 +8,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - name: checkout base repo
+      uses: actions/checkout@master
+    - name: Checkout submodules
+      uses: textbook/git-checkout-submodule-action@master      
+      
     - name: Set up Python 3.7
       uses: actions/setup-python@v1
       with:
