@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - name: clone repo
-      uses: actions/checkout@master
+      uses: actions/checkout@v1
       with:
         submodules: 'true'
       
@@ -27,14 +27,14 @@ jobs:
     - name: pyinstaller version
       run: pyinstaller --version
     
-    #- name: run SSTslicer directly
-    #  run: python .\src\SSTslicer.py
+    - name: run SSTslicer directly
+      run: python .\src\SSTslicer.py -v
     
     - name: compile SSTslicer
       run: pyinstaller -F .\src\SSTslicer.py
       
-    #- name: run compiled version
-    #  run: .\dist\SSTslicer.exe -v
+    - name: run compiled version
+      run: .\dist\SSTslicer.exe -v
 
     - name: save compiled files
       uses: actions/upload-artifact@master
