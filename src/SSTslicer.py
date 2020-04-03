@@ -79,3 +79,25 @@ if filename.split('.')[-1] == "sst":
 
         print("written output to file %s" % newfilename)
         print("done!")
+        show_exit()
+
+elif filename.split('.')[-1] == "tga":
+    num_infiles = len(sys.argv[1:])
+    prefix = filename.split('.')[-2]
+
+    if num_infiles == 1:
+        print("got one TGA file as input - splitting....")
+        xTiles = int(input("input number of tiles on x-axis: "))
+        yTiles = int(input("input number of tiles on y-axis: "))
+
+        tiles = slicer.slice(filename, prefix, col=xTiles, row=yTiles, save=True)
+        SSTtiles = list()
+
+        for part in tiles:
+            x, y = part.image.size
+            newfilename = part.generate_filename(prefix=prefix, format='sst', path=False)
+            
+            tmpSST = SST(1, 1, x_res=x, y_res=y, TGAbody=part.get_bytes())
+            print(newfilename)
+            tmpSST.write_to_file(newfilename, add_extention=False)        
+        

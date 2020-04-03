@@ -46,7 +46,12 @@ class Tile(object):
         if not filename:
             filename = self.generate_filename(format=format)
         self.image.save(filename, format)
-        self.filename = filename
+        self.filename = filename    
+
+    def get_bytes(self, format='tga'):
+        bTile = BytesIO()
+        self.image.save(bTile, format)
+        return bTile.getvalue()[:-26] # cut the last 26 bytes, because PIL adds some useless metadata, which fuck up SSTviewer
 
     def __repr__(self):
         """Show tile number, and if saved to disk, filename."""
@@ -129,13 +134,13 @@ def validate_image_col_row(image , col , row):
     if col == 1 and row == 1:
         raise ValueError('There is nothing to divide. You asked for the entire image.')
 
-def slice(bytesIO: BytesIO, name: str, number_tiles=None, col=None, row=None, 
+def slice(filename_or_bytesIO, name: str, number_tiles=None, col=None, row=None, 
           save=True, DecompressionBombWarning=True):
     """
     Split an image into a specified number of tiles.
 
     Args:
-       filename_or_bytesIO (BytesIO): the image file as BytesIO object
+       filename_or_bytesIO (string/BytesIO): the image file as BytesIO object
        number_tiles (int):  The number of tiles required.
 
     Kwargs:
@@ -143,12 +148,12 @@ def slice(bytesIO: BytesIO, name: str, number_tiles=None, col=None, row=None,
        DecompressionBombWarning (bool): Whether to suppress Pillow DecompressionBombWarning
 
     Returns:
-        Tuple of :class:`Tile` instances.
+        List of :class:`Tile` instances.
     """
     if DecompressionBombWarning is False:
         Image.MAX_IMAGE_PIXELS = None
     
-    im = Image.open(bytesIO)
+    im = Image.open(filename_or_bytesIO)
     im_w, im_h = im.size
 
     columns = 0
@@ -179,7 +184,7 @@ def slice(bytesIO: BytesIO, name: str, number_tiles=None, col=None, row=None,
             number += 1
     if save:
         save_tiles(tiles, prefix=name, directory=os.getcwd())
-    return tuple(tiles)
+    return tiles
 
 def save_tiles(tiles, prefix='', directory=os.getcwd(), format='tga'):
     """
