@@ -14,12 +14,50 @@ import lib as slicer
 from lib.SST.src.lib.SST import SST
 from lib.SST.src.lib.TGA import TGA
 
-version = "0.0.1"
+version = "0.4"
 magic_number_compressed = b'PK01' # this is the magic number for all compressed files
+tga_output = False
+confirm = True
+
+print("### SST Slicer for Empire Earth made by zocker_160")
+print("### version %s" % version)
+print("###")
+print("### if you have any issue, pls feel free to report it:")
+print("### https://github.com/EE-modders/SST-image_slicer/issues")
+print("###")
+print("###----------------------------------------------\n")
+
+def show_help():    
+    print("""USAGE: SSTslicer [options] <inputfile1> <inputfile2> ... <inputfileN>
+important: if you want to convert multiple TGAs you can also just drag and drop them all at once onto the executable
+possible options:
+-h, --help, -v  show this help / version information
+--tga           save all splits as tga as well
+""")
+    if confirm: input("press Enter to close........")
+    sys.exit()
 
 def show_exit():
     input("\npress Enter to close.......\n")
     sys.exit()
+
+if len(sys.argv) <= 1:
+    show_help()
+
+parameter_list = list()
+
+for i, arg in enumerate(sys.argv):
+    if arg == "-h" or arg == "--help" or arg == "-v":
+        confirm = False
+        show_help()
+    if arg == "--tga":
+        tga_output = True
+        parameter_list.append(i)
+
+# remove commandline parameters
+parameter_list.sort(reverse=True)
+for param in parameter_list:
+    sys.argv.pop(param)
 
 try:
     filename = sys.argv[1]
@@ -29,8 +67,6 @@ except IndexError:
 
 try:
     with open(filename, 'rb') as infile:
-        global TGAbody
-        
         print("analysing %s......" % filename)
         if infile.read(4) == magic_number_compressed:
             print("\nyou need to decompress the file first!\n")
@@ -39,11 +75,13 @@ except EnvironmentError:
     print("ERROR: File \"%s\" not found!" % filename)
     show_exit()
 
+
+
 if filename.split('.')[-1] == "sst":
     num_infiles = len(sys.argv[1:])    
 
     if num_infiles == 1:
-        print("got single SST file as input")
+        print("got single SST file as input - splitting....")
         xTiles = int(input("input number of tiles on x-axis: "))
         yTiles = int(input("input number of tiles on y-axis: "))
 
@@ -77,7 +115,7 @@ if filename.split('.')[-1] == "sst":
         image = slicer.join(slicer.get_tiles(files))
         image.save(newfilename)
 
-        print("written output to file %s" % newfilename)
+        print("written output to file:\n%s" % newfilename)
         print("done!")
         show_exit()
 
@@ -90,7 +128,7 @@ elif filename.split('.')[-1] == "tga":
         xTiles = int(input("input number of tiles on x-axis: "))
         yTiles = int(input("input number of tiles on y-axis: "))
 
-        tiles = slicer.slice(filename, prefix, col=xTiles, row=yTiles, save=True)
+        tiles = slicer.slice(filename, prefix, col=xTiles, row=yTiles, save=tga_output)
         SSTtiles = list()
 
         for part in tiles:
@@ -101,3 +139,8 @@ elif filename.split('.')[-1] == "tga":
             print(newfilename)
             tmpSST.write_to_file(newfilename, add_extention=False)        
         
+        print("done!")
+        show_exit()
+    else:
+        print("INFO: function to join multiple TGAs is not implemented")
+        show_exit()
