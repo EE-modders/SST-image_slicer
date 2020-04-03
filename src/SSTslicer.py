@@ -10,7 +10,7 @@ import os
 import sys
 from io import BytesIO
 
-import lib as slicer
+from lib import main as slicer
 from lib.SST.src.lib.SST import SST
 from lib.SST.src.lib.TGA import TGA
 
