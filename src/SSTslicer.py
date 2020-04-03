@@ -53,7 +53,7 @@ if filename.split('.')[-1] == "sst":
         if (SST.header["tiles"] > 1 or SST.header["resolutions"] > 1):
             raise TypeError("This SST file has more than one tile and/or resolution!")
 
-        slicer.slice(BytesIO(SST.TGAbody), filename.split('.')[0], col=xTiles, row=yTiles, save=True)
+        slicer.slice(BytesIO(SST.TGAbody), filename.split('.')[-2], col=xTiles, row=yTiles, save=True)
     else:
         filenames = sys.argv[1:]
         newfilename = filenames[0].split('.')[-2].split('_')[-3] + "-joined.tga"
