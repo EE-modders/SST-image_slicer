@@ -1,0 +1,3 @@
+[submodule "src/lib/SST"]
+	path = src/lib/SST
+	url = https://github.com/EE-modders/SST-tool.git
