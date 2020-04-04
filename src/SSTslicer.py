@@ -75,9 +75,9 @@ except EnvironmentError:
     print("ERROR: File \"%s\" not found!" % filename)
     show_exit()
 
+file_ext = filename.split('.')[-1]
 
-
-if filename.split('.')[-1] == "sst":
+if file_ext == "sst":
     num_infiles = len(sys.argv[1:])    
 
     if num_infiles == 1:
@@ -119,7 +119,7 @@ if filename.split('.')[-1] == "sst":
         print("done!")
         show_exit()
 
-elif filename.split('.')[-1] == "tga":
+elif file_ext == "tga":
     num_infiles = len(sys.argv[1:])
     prefix = filename.split('.')[-2]
 
@@ -142,7 +142,27 @@ elif filename.split('.')[-1] == "tga":
         print("done!")
         show_exit()
     else:
-        print("INFO: function to join multiple TGAs is not implemented")
+        filenames = sys.argv[1:]
+        newfilename = filenames[0].split('.')[-2].split('_')[-3] + "-joined.tga"
+
+        print("\ngot %d TGA files as input:  (watch out for the right order!!)\n" % num_infiles)
+
+        for i in range(num_infiles):
+            print("%d: %s" % (i+1, filenames[i]))
+        print()
+        response = input("is that correct? (y/n) ")
+        if response != "y": show_exit()
+
+        files = list()
+
+        for file in filenames:
+            files.append( (file, file) )
+
+        image = slicer.join(slicer.get_tiles(files))
+        image.save(newfilename)
+
+        print("written output to file:\n%s" % newfilename)
+        print("done!")
         show_exit()
 else:
     print("ERROR: unsupported file extention: %s")
