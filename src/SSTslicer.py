@@ -14,7 +14,7 @@ from lib import main as slicer
 from lib.SST.src.lib.SST import SST
 from lib.SST.src.lib.TGA import TGA
 
-version = "0.4"
+version = "0.5"
 magic_number_compressed = b'PK01' # this is the magic number for all compressed files
 tga_output = False
 confirm = True
