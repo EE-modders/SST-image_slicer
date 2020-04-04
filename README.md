@@ -28,5 +28,5 @@ image formats other than TGA (Type 2) and SST (v1) are not supported
 - TGA images with RLE compression will not work
 
 ## Contribute
-- if you have an issue or suggestion feel free to create an [issue](https://github.com/EE-modders/SST-tool/issues) or [pull request](https://github.com/EE-modders/SST-tool/pulls) 
+- if you have an issue or suggestion feel free to create an [issue](https://github.com/EE-modders/SST-image_slicer/issues) or [pull request](https://github.com/EE-modders/SST-image_slicer/pulls) 
 - you can also join our official [EE-reborn Discord server](https://discord.gg/BjUXbFB).
