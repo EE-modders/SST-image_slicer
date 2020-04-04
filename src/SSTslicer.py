@@ -144,3 +144,7 @@ elif filename.split('.')[-1] == "tga":
     else:
         print("INFO: function to join multiple TGAs is not implemented")
         show_exit()
+else:
+    print("ERROR: unsupported file extention: %s")
+    print("only SST and TGA files are supported.")
+    show_exit()
