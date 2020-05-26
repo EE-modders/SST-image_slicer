@@ -91,7 +91,7 @@ if file_ext == "sst":
         if (SST.header["tiles"] > 1 or SST.header["resolutions"] > 1):
             raise TypeError("This SST file has more than one tile and/or resolution!")
 
-        slicer.slice(BytesIO(SST.TGAbody), filename.split('.')[-2], col=xTiles, row=yTiles, save=True)
+        slicer.slice(BytesIO(SST.ImageBody), filename.split('.')[-2], col=xTiles, row=yTiles, save=True)
     else:
         filenames = sys.argv[1:]
         newfilename = filenames[0].split('.')[-2].split('_')[-3] + "-joined.tga"
@@ -110,7 +110,7 @@ if file_ext == "sst":
             tmpSST = SST()
             tmpSST.read_from_file(file)
 
-            files.append( (file, BytesIO(tmpSST.TGAbody)) )
+            files.append( (file, BytesIO(tmpSST.ImageBody)) )
         
         image = slicer.join(slicer.get_tiles(files))
         image.save(newfilename)
@@ -135,7 +135,7 @@ elif file_ext == "tga":
             x, y = part.image.size
             newfilename = part.generate_filename(prefix=prefix, format='sst', path=False)
             
-            tmpSST = SST(1, 1, x_res=x, y_res=y, TGAbody=part.get_bytes())
+            tmpSST = SST(1, 1, x_res=x, y_res=y, ImageBody=part.get_bytes())
             print(newfilename)
             tmpSST.write_to_file(newfilename, add_extention=False)        
         
