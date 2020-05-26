@@ -26,7 +26,6 @@ image formats other than TGA (Type 2) and SST (v1) are not supported
 
 ## Known problems:
 
-- 
 - TGA images with any sort of metadata will not convert properly, make sure to remove any metadata from the file
 - TGA images with RLE compression will not work
 
