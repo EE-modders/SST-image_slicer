@@ -94,7 +94,7 @@ if file_ext == "sst":
         slicer.slice(BytesIO(SST.ImageBody), filename.split('.')[-2], col=xTiles, row=yTiles, save=True)
     else:
         filenames = sys.argv[1:]
-        newfilename = filenames[0].split('.')[-2].split('_')[-3] + "-joined.tga"
+        newfilename = filenames[0].split('.')[0][:-3] + "joined.tga"
 
         print("\ngot %d SST files as input:  (watch out for the right order!!)\n" % num_infiles)
 
