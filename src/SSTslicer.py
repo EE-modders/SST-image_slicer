@@ -17,7 +17,7 @@ if __name__ == "__main__":
 else:
     from .lib import main as slicer
     # this is only for the import for EEStudio II - yes I know this solution is shit, but should work for now
-    from lib.SSTtool.src.lib.SST as SSTi
+    from lib.SSTtool.src.lib.SST import SST as SSTi
 
 
 version = "0.7"
