@@ -16,3 +16,4 @@ __*
 sample.*
 .directory
 *.code-workspace
+venv
