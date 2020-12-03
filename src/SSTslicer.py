@@ -14,11 +14,10 @@ from io import BytesIO
 if __name__ == "__main__":
     from lib import main as slicer
     from lib.SST.src.lib.SST import SST as SSTi
-    #from lib.SST.src.lib.TGA import TGA as TGAi
 else:
     from .lib import main as slicer
-    from .lib.SST.src.lib.SST import SST as SSTi
-    #from .lib.SST.src.lib.TGA import TGA as TGAi
+    # this is only for the import for EEStudio II - yes I know this solution is shit, but should work for now
+    from lib.SSTtool.src.lib.SST as SSTi
 
 
 version = "0.7"
